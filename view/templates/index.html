@@ -1,0 +1,18 @@
+{{define "index"}}
+<html>
+    <head>
+        <title>Buzzer Beater</title>
+    </head>
+    <body>
+        <h1>This is header</h1>
+        <div>
+            <h2>Start of embeded template:</h2>
+            <h2>-------------------------------------</h2>
+            {{template "content" .}}
+            <h2>-------------------------------------</h2>
+            <h2>End of embeded template</h2>
+        </div>
+        <h1>This is footer</h1>
+    </body>
+</html>
+{{end}}
