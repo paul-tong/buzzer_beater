@@ -9,5 +9,5 @@ func SetupRouter() {
 	http.HandleFunc("/posts", showAllPosts)
 	http.HandleFunc("/love", sayLove)
 	http.HandleFunc("/bye", sayBye)
-
+	http.HandleFunc("/login", handleLogIn)
 }
