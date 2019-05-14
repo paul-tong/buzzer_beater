@@ -57,15 +57,16 @@ func sayBye(w http.ResponseWriter, r *http.Request) {
 func handleLogIn(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("handleLogIn\n")
 
+	loginModel := model.LoginViewModel{}
+
 	// show the login page if request type is Get
 	if r.Method == http.MethodGet {
-		renderTemplates(w, "login.html", "")
+		renderTemplates(w, "login.html", loginModel)
 		return
 	}
 
 	// verify the login data if request type is Post
 	if r.Method == http.MethodPost {
-		loginModel := model.LoginViewModel{}
 
 		r.ParseForm()
 		username := r.Form.Get("username")
