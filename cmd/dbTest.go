@@ -1,19 +1,18 @@
+// test on database operations
+
 package main
 
 import (
-	"net/http"
+	"fmt"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	// import from local package
-	"github.com/paul-tong/buzzer_beater/controller"
+
 	"github.com/paul-tong/buzzer_beater/model"
 )
 
 func main() {
-	// setup  router
-	controller.SetupRouter()
-
 	// connect to database and setup db instance
 	db := model.ConnectToDB()
 	defer db.Close() // this will excute at end of main function
@@ -28,6 +27,29 @@ func main() {
 	model.AddPost(post2)
 	model.AddPost(post3)*/
 
-	// start listening to the port
-	http.ListenAndServe(":8888", nil)
+	// add one record
+	/*post = model.PostTest{Title: "tong", Body: "Hello, tong!"}
+	post = model.AddPost(post) // get new post(id added)
+	fmt.Println(post)*/
+
+	// delete one record
+	model.DeletePostByID(8)
+
+	// get record
+	posts := model.GetAllPosts()
+	fmt.Println(posts)
+
+	post := model.GetPostByID(5)
+	fmt.Println(post)
+
+	post = model.GetPostByTitle("morning")
+	fmt.Println(post)
+
+	// update
+	post = model.PostTest{ID: 9, Title: "duo", Body: "I like you"}
+	post = model.UpdatePost(post)
+	fmt.Println(post)
+
+	post = model.UpdatePostBodyByID(9, "I like you")
+	fmt.Println(post)
 }

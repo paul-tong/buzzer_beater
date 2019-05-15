@@ -1,6 +1,6 @@
 package model
 
-type AlertTest struct {
+type Alert struct {
 	User    // extend User struct, will have all the fields of User struct
 	Section string
 	MinRow  int
