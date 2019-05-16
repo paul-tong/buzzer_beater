@@ -10,4 +10,5 @@ func SetupRouter() {
 	http.HandleFunc("/love", sayLove)
 	http.HandleFunc("/bye", sayBye)
 	http.HandleFunc("/login", handleLogIn)
+	http.HandleFunc("/events", searchEvent)
 }

@@ -11,6 +11,14 @@ import (
 const layoutPagePath string = "view/templates/index.html"
 const contentFolderPath string = "view/templates/contents/"
 
+// test user and alert records
+var (
+	User1  = model.User{ID: 1, Email: "tong.gmail.com", PasswordHash: "tong"}
+	User2  = model.User{ID: 2, Email: "duo.gmail.com", PasswordHash: "duoduo"}
+	Alert1 = model.Alert{ID: 1, UserId: 1, EventId: "1", Section: "1", PriceLimit: 11.1}
+	Alert2 = model.Alert{ID: 2, UserId: 2, EventId: "2", Section: "2", PriceLimit: 22.2}
+)
+
 // combine given data and content page with layout, then render the page to client
 func renderTemplates(w http.ResponseWriter, contentPageName string, data interface{}) {
 
@@ -21,7 +29,7 @@ func renderTemplates(w http.ResponseWriter, contentPageName string, data interfa
 
 func showHomePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("showHomePage\n")
-	user := model.User{Username: "Tong"}
+	user := model.User{Email: "Tong"}
 
 	renderTemplates(w, "welcome.html", user)
 }
@@ -30,8 +38,8 @@ func showAllPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("showAllPosts\n")
 
 	// preapre data
-	u1 := model.User{Username: "tong"}
-	u2 := model.User{Username: "duo duo"}
+	u1 := model.User{Email: "tong"}
+	u2 := model.User{Email: "duo duo"}
 
 	posts := []model.Post{
 		model.Post{User: u1, Body: "I like you duo duo!"},
@@ -69,7 +77,7 @@ func handleLogIn(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 
 		r.ParseForm()
-		username := r.Form.Get("username")
+		username := r.Form.Get("email")
 		password := r.Form.Get("password")
 
 		// check the validation of input format (usually used for register)
@@ -96,4 +104,27 @@ func handleLogIn(w http.ResponseWriter, r *http.Request) {
 
 func checkLogIn(username string, password string) bool {
 	return username == "tong" && password == "1234"
+}
+
+func searchEvent(w http.ResponseWriter, r *http.Request) {
+	fmt.Print("serach events\n")
+
+	//loginModel := model.LoginViewModel{}
+
+	// show the events page if request type is Get
+	if r.Method == http.MethodGet {
+		renderTemplates(w, "events.html", "Get mothod")
+		return
+	}
+
+	// request data from ticketmaster api if request type is Post
+	if r.Method == http.MethodPost {
+
+		r.ParseForm()
+		keyWords := r.Form.Get("searchKeyWords")
+
+		// request results from ticktmaster api
+		events := searchEventByKeyWords(string(keyWords), defaultEventCount)
+		renderTemplates(w, "events.html", events)
+	}
 }

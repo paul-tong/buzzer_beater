@@ -1,6 +1,6 @@
 {{define "content"}}
-    <h1>Hello, {{.Username}}, all posts: </h1>
+    <h1>Hello, {{.Email}}, all posts: </h1>
     {{range .Posts}}
-        <div><p>{{.Username}} says: <b>{{.Body}}</b></p></div>
+        <div><p>{{.Email}} says: <b>{{.Body}}</b></p></div>
     {{end}}
 {{end}}
