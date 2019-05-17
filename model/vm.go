@@ -8,6 +8,14 @@ type PostViewModel struct {
 	Posts []Post
 }
 
+type eventViewModle struct {
+	ID    string
+	Name  string
+	URL   string
+	Image string
+	Date  string
+}
+
 type LoginViewModel struct {
 	Errs []string // contains error information of this login
 }
