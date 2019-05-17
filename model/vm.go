@@ -1,4 +1,5 @@
 // view models: contains models that used for render view templates
+// don't need to keep in database
 
 package model
 

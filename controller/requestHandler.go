@@ -106,6 +106,7 @@ func checkLogIn(username string, password string) bool {
 	return username == "tong" && password == "1234"
 }
 
+// serach event information from ticketmaster api based on given keywords
 func searchEvent(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("serach events\n")
 
