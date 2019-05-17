@@ -41,7 +41,7 @@ func searchEventByKeyWords(keyWords string, count string) string {
 		log.Println("Event count returned from ticketmaster is zero")
 	}
 
-	// build eventViewModel
+	// build a list of eventViewModel
 	for _, event := range events {
 
 		fmt.Println(event.Name)
