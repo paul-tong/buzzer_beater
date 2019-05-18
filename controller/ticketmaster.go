@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,10 +14,20 @@ var defaultEventCount = "3"
 var ticketmasterAPI string = "I5H7fVWSs6yLf8RfSfImVVbbzYQL61J7"
 
 // get events from ticketmaster api
+// serachType: "keyword", "eventId"
 // TO_DO: may need to handle exceptions like when event locks some information
-func searchEventByKeyWords(keyWords string, count string) ([]model.EventViewModle, error) {
-	keyWords = strings.Join(strings.Fields(keyWords), "+") // split keywords by space(may have multiple spaces), then join with +
-	url := "https://app.ticketmaster.com/discovery/v2/events.json?&keyword=" + keyWords + "&size=" + count + "&apikey=" + ticketmasterAPI
+func searchEventFromTicketmaster(searchType string, searchWords string, count string) ([]model.EventViewModle, error) {
+	var url string
+
+	if searchType == "keyword" {
+		keyWords := strings.Join(strings.Fields(searchWords), "+") // split keywords by space(may have multiple spaces), then join with +
+		url = "https://app.ticketmaster.com/discovery/v2/events.json?&keyword=" + keyWords + "&size=" + count + "&apikey=" + ticketmasterAPI
+	} else if searchType == "eventId" {
+		eventId := searchWords
+		url = "https://app.ticketmaster.com/discovery/v2/events.json?&id=" + eventId + "&size=1&apikey=" + ticketmasterAPI
+	} else {
+		log.Println("Undifined event serach type!")
+	}
 
 	// get response from url and
 	resp, err := http.Get(url)
@@ -50,7 +59,7 @@ func searchEventByKeyWords(keyWords string, count string) ([]model.EventViewModl
 	for _, event := range events {
 		var eventModel = model.EventViewModle{ID: event.ID, Name: event.Name, Date: event.Dates.Start.LocalDate, URL: event.URL, SeatMap: event.Seatmap.StaticURL}
 		eventsModel = append(eventsModel, eventModel)
-		fmt.Println(event.Name)
+		//fmt.Println(event.Name)
 	}
 
 	// convert json into map

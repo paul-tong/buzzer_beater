@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/julienschmidt/httprouter"
 
 	// import from local package
 	"github.com/paul-tong/buzzer_beater/controller"
@@ -12,7 +13,8 @@ import (
 
 func main() {
 	// setup  router
-	controller.SetupRouter()
+	router := httprouter.New()
+	controller.SetupRouter(router)
 
 	// connect to database and setup db instance
 	db := model.ConnectToDB()
@@ -20,5 +22,5 @@ func main() {
 	model.SetDB(db)
 
 	// start listening to the port
-	http.ListenAndServe(":8888", nil)
+	http.ListenAndServe(":8888", router)
 }

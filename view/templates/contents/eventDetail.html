@@ -1,15 +1,5 @@
 {{define "content"}}
-<h3>events list: {{.}}!</h3>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Date</th>
-        <th>Name</th>
-        <th>URL</th>
-        <th>SeatMap</th>
-        <th>Create Alert</th>
-    </tr>
-    {{range .}}
+{{if .}}
     <tr>
         <td>{{.ID}}</td>
         <td>{{.Date}}</td>
@@ -18,6 +8,8 @@
         <td><img src={{.SeatMap}} alt="Seat Map" height="42" width="42"></td>
         <td><a href={{(printf "%s%s" "/event/" .ID)}}>create alert</a></td>
     </tr>
-    {{end}}
-</table>
+{{else}}
+<h2>Sorry, We cannot find this event...</h2>
+{{end}}
+
 {{end}}
