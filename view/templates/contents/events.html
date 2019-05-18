@@ -1,3 +1,21 @@
 {{define "content"}}
 <h3>events list: {{.}}!</h3>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Name</th>
+        <th>URL</th>
+        <th>SeatMap</th>
+    </tr>
+    {{range .}}
+    <tr>
+        <td>{{.ID}}</td>
+        <td>{{.Date}}</td>
+        <td>{{.Name}}</td>
+        <td><a href={{.URL}}>Ticketmaster Link</a></td>
+        <td><img src={{.SeatMap}} alt="Seat Map" height="42" width="42"></td>
+    </tr>
+    {{end}}
+</table>
 {{end}}

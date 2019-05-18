@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/paul-tong/buzzer_beater/model"
@@ -125,7 +126,10 @@ func searchEvent(w http.ResponseWriter, r *http.Request) {
 		keyWords := r.Form.Get("searchKeyWords")
 
 		// request results from ticktmaster api
-		events := searchEventByKeyWords(string(keyWords), defaultEventCount)
+		events, err := searchEventByKeyWords(string(keyWords), defaultEventCount)
+		if err != nil {
+			log.Println("Search Event from tickemaster api error: " + err.Error())
+		}
 		renderTemplates(w, "events.html", events)
 	}
 }
