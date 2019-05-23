@@ -2,19 +2,32 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/paul-tong/buzzer_beater/model"
 )
 
 var defaultEventCount = "3"
 var ticketmasterAPI string = "I5H7fVWSs6yLf8RfSfImVVbbzYQL61J7"
 
-func searchEventByKeyWords(keyWords string, count string) string {
-	keyWords = strings.Join(strings.Fields(keyWords), "+") // split keywords by space(may have multiple spaces), then join with +
-	url := "https://app.ticketmaster.com/discovery/v2/events.json?&keyword=" + keyWords + "&size=" + count + "&apikey=" + ticketmasterAPI
+// get events from ticketmaster api
+// serachType: "keyword", "eventId"
+// TO_DO: may need to handle exceptions like when event locks some information
+func searchEventFromTicketmaster(searchType string, searchWords string, count string) ([]model.EventViewModle, error) {
+	var url string
+
+	if searchType == "keyword" {
+		keyWords := strings.Join(strings.Fields(searchWords), "+") // split keywords by space(may have multiple spaces), then join with +
+		url = "https://app.ticketmaster.com/discovery/v2/events.json?&keyword=" + keyWords + "&size=" + count + "&apikey=" + ticketmasterAPI
+	} else if searchType == "eventId" {
+		eventId := searchWords
+		url = "https://app.ticketmaster.com/discovery/v2/events.json?&id=" + eventId + "&size=1&apikey=" + ticketmasterAPI
+	} else {
+		log.Println("Undifined event serach type!")
+	}
 
 	// get response from url and
 	resp, err := http.Get(url)
@@ -41,11 +54,15 @@ func searchEventByKeyWords(keyWords string, count string) string {
 		log.Println("Event count returned from ticketmaster is zero")
 	}
 
-	// build eventViewModel
+	// build a list of eventViewModel
+	var eventsModel []model.EventViewModle
 	for _, event := range events {
-
-		fmt.Println(event.Name)
+		var eventModel = model.EventViewModle{ID: event.ID, Name: event.Name, Date: event.Dates.Start.LocalDate, URL: event.URL, SeatMap: event.Seatmap.StaticURL}
+		eventsModel = append(eventsModel, eventModel)
+		//fmt.Println(event.Name)
 	}
+
+	// convert json into map
 	/*var data map[string]interface{} // may, key is string, value is interface(can be any data type)
 	json.Unmarshal(body, &data)
 
@@ -61,9 +78,10 @@ func searchEventByKeyWords(keyWords string, count string) string {
 		fmt.Println("name: " + name.(string) + " id: " + id.(string) + " url: " + url.(string) + " seatMap: " + seatMap.(string) + " date: " + date.(string))
 	}*/
 
-	return url
+	return eventsModel, err
 }
 
+// Structs used to convert event json gotten from ticketmaster api
 // Generated from https://app.quicktype.io/
 // To parse and unparse this JSON data, add this code to your project and do:
 //

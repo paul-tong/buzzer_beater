@@ -1,4 +1,5 @@
 // view models: contains models that used for render view templates
+// don't need to keep in database
 
 package model
 
@@ -8,12 +9,12 @@ type PostViewModel struct {
 	Posts []Post
 }
 
-type eventViewModle struct {
-	ID    string
-	Name  string
-	URL   string
-	Image string
-	Date  string
+type EventViewModle struct {
+	ID      string
+	Name    string
+	Date    string
+	URL     string
+	SeatMap string
 }
 
 type LoginViewModel struct {
